@@ -1,0 +1,15 @@
+case_id,company,n_misstated_10k,n_flagged,detected,first_flag_filed,first_flag_fyear,flagged_any_pre_event_10k,n_pre_event_10k,lead_days,lead_to_4_02_days,lead_years,lead_quarters
+valeant,Valeant Pharmaceuticals,1,0,False,,,True,5,,,,
+kraftheinz,Kraft Heinz,2,0,False,,,False,2,,,,
+mimedx,MiMedx Group,5,2,True,2013-03-15,2012.0,True,6,1813.0,1910.0,4.963723477070499,19.854893908281998
+synchronoss,Synchronoss Technologies,2,0,False,,,True,6,,,,
+roadrunner,Roadrunner Transportation Systems,2,0,False,,,False,4,,,,
+celadon,Celadon Group,1,1,True,2016-09-13,2016.0,True,4,230.0,230.0,0.6297056810403833,2.518822724161533
+saexploration,SAExploration Holdings,4,1,True,2017-03-15,2016.0,True,6,884.0,884.0,2.4202600958247777,9.681040383299111
+pareteum,Pareteum,1,1,True,2019-03-18,2018.0,True,8,217.0,217.0,0.5941136208076659,2.3764544832306638
+steinmart,Stein Mart,1,0,False,,,False,1,,,,
+osiris,Osiris Therapeutics,1,1,True,2015-03-20,2014.0,True,4,245.0,361.0,0.6707734428473648,2.6830937713894594
+quantum,Quantum Corp,3,1,True,2017-06-01,2017.0,True,6,470.0,470.0,1.2867898699520877,5.147159479808351
+supermicro,Super Micro Computer,2,0,False,,,False,5,,,,
+unitek,UniTek Global Services,1,0,False,,,False,1,,,,
+kitdigital,KIT digital,1,1,True,2012-03-30,2011.0,True,1,236.0,236.0,0.6461327857631759,2.5845311430527036

@@ -1,0 +1,56 @@
+cik,name,sic,sic_desc,role,case_id
+885590,Valeant Pharmaceuticals,2834,Pharmaceutical Preparations,case,valeant
+1637459,Kraft Heinz,2030,"Canned, Frozen & Preservd Fruit, Veg & Food Specialties",case,kraftheinz
+1376339,MiMedx Group,3841,Surgical & Medical Instruments & Apparatus,case,mimedx
+1131554,Synchronoss Technologies,7371,Services-Computer Programming Services,case,synchronoss
+1440024,Roadrunner Transportation Systems,4731,Arrangement of  Transportation of  Freight & Cargo,case,roadrunner
+865941,Celadon Group,4213,Trucking (No Local),case,celadon
+1514732,SAExploration Holdings,1382,Oil & Gas Field Exploration Services,case,saexploration
+1084384,Pareteum,7373,Services-Computer Integrated Systems Design,case,pareteum
+884940,Stein Mart,5651,Retail-Family Clothing Stores,case,steinmart
+1360886,Osiris Therapeutics,2836,"Biological Products, (No Diagnostic Substances)",case,osiris
+709283,Quantum Corp,3572,Computer Storage Devices,case,quantum
+1375365,Super Micro Computer,3571,Electronic Computers,case,supermicro
+826773,UniTek Global Services,4812,Radiotelephone Communications,case,unitek
+1076700,KIT digital,8900,"Services-Services, NEC",case,kitdigital
+1551152,AbbVie Inc.,2834,Pharmaceutical Preparations,control,valeant
+14272,BRISTOL MYERS SQUIBB CO,2834,Pharmaceutical Preparations,control,valeant
+882095,"GILEAD SCIENCES, INC.",2836,"Biological Products, (No Diagnostic Substances)",control,valeant
+21344,COCA COLA CO,2080,Beverages,control,kraftheinz
+77476,PEPSICO INC,2080,Beverages,control,kraftheinz
+1103982,"Mondelez International, Inc.",2000,Food and Kindred Products,control,kraftheinz
+718924,SPAN AMERICA MEDICAL SYSTEMS INC,3842,"Orthopedic, Prosthetic & Surgical Appliances & Supplies",control,mimedx
+1323885,"AtriCure, Inc.",3841,Surgical & Medical Instruments & Apparatus,control,mimedx
+1289340,"Stereotaxis, Inc.",3845,Electromedical & Electrotherapeutic Apparatus,control,mimedx
+1013237,FACTSET RESEARCH SYSTEMS INC,7370,"Services-Computer Programming, Data Processing, Etc.",control,synchronoss
+1591698,Paylocity Holding Corp,7372,Services-Prepackaged Software,control,synchronoss
+1303652,Tableau Software Inc,7372,Services-Prepackaged Software,control,synchronoss
+1220754,ModivCare Inc,4700,Transportation Services,control,roadrunner
+1366868,"Globalstar, Inc.",4899,"Communications Services, NEC",control,roadrunner
+1362468,Allegiant Travel CO,4512,"Air Transportation, Scheduled",control,roadrunner
+853816,LANDSTAR SYSTEM INC,4213,Trucking (No Local),control,celadon
+19745,CHESAPEAKE UTILITIES CORP,4923,Natural Gas Transmisison & Distribution,control,celadon
+1513965,"Third Coast Midstream, LLC",4922,Natural Gas Transmission,control,celadon
+719209,ISRAMCO INC,1311,Crude Petroleum & Natural Gas,control,saexploration
+82020,UNITED STATES LIME & MINERALS INC,1400,Mining & Quarrying of  Nonmetallic Minerals (No Fuels),control,saexploration
+1118417,"MODEL N, INC.",7370,"Services-Computer Programming, Data Processing, Etc.",control,pareteum
+78749,AGILYSYS INC,7373,Services-Computer Integrated Systems Design,control,pareteum
+1666071,"Cardlytics, Inc.",7370,"Services-Computer Programming, Data Processing, Etc.",control,pareteum
+1360530,"Vitamin Shoppe, Inc.",5400,Retail-Food Stores,control,steinmart
+809248,"CARROLS RESTAURANT GROUP, INC.",5812,Retail-Eating  Places,control,steinmart
+1316835,"Builders FirstSource, Inc.",5211,Retail-Lumber & Other Building Materials Dealers,control,steinmart
+1038133,HESKA CORP,2835,In Vitro & In Vivo Diagnostic Substances,control,osiris
+1401708,"NS Wind Down Co., Inc.",2836,"Biological Products, (No Diagnostic Substances)",control,osiris
+1461993,"MELINTA THERAPEUTICS, INC. /NEW/",2834,Pharmaceutical Preparations,control,osiris
+854775,DIGI INTERNATIONAL INC,3576,Computer Communications Equipment,control,quantum
+42682,GORMAN RUPP CO,3561,Pumps & Pumping Equipment,control,quantum
+886346,KADANT INC,3550,Special Industry Machinery (No Metalworking Machinery),control,quantum
+1447599,"FITBIT, INC.",3571,Electronic Computers,control,supermicro
+918386,QLOGIC CORP,3576,Computer Communications Equipment,control,supermicro
+103145,VEECO INSTRUMENTS INC,3559,"Special Industry Machinery, NEC",control,supermicro
+1292653,"Inteliquent, Inc.",4813,Telephone Communications (No Radiotelephone),control,unitek
+1104358,BROADVIEW NETWORKS HOLDINGS INC,4813,Telephone Communications (No Radiotelephone),control,unitek
+1034669,FISHER COMMUNICATIONS INC,4833,Television Broadcasting Stations,control,unitek
+1469433,Ancestry.com Inc.,7374,Services-Computer Processing & Data Preparation,control,kitdigital
+1451951,FriendFinder Networks Inc.,7370,"Services-Computer Programming, Data Processing, Etc.",control,kitdigital
+1111665,TELECOMMUNICATION SYSTEMS INC /FA/,7372,Services-Prepackaged Software,control,kitdigital

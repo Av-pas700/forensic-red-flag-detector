@@ -1,0 +1,420 @@
+{
+  "beneish_threshold": -1.78,
+  "benford": {
+    "median_mad_cases": 0.014623816618901837,
+    "median_mad_controls": 0.015305592083945182,
+    "median_n_values": 315.0,
+    "n_filings_scored": 507,
+    "n_reliable_in_eval": 104,
+    "share_nonconforming_cases": 0.4444444444444444,
+    "share_nonconforming_controls": 0.5064935064935064,
+    "share_reliable_n": 1.0
+  },
+  "coefficients": {
+    "anchored": [
+      {
+        "feature": "mscore",
+        "std_coefficient": 0.5244
+      },
+      {
+        "feature": "ni_cfo_gap_rev",
+        "std_coefficient": 0.1909
+      },
+      {
+        "feature": "sloan_accruals",
+        "std_coefficient": 0.1525
+      },
+      {
+        "feature": "ar_rev_gap",
+        "std_coefficient": 0.0927
+      }
+    ],
+    "core": [
+      {
+        "feature": "sgi",
+        "std_coefficient": 0.5
+      },
+      {
+        "feature": "aqi",
+        "std_coefficient": 0.392
+      },
+      {
+        "feature": "dsri",
+        "std_coefficient": 0.3675
+      },
+      {
+        "feature": "tata",
+        "std_coefficient": 0.1631
+      },
+      {
+        "feature": "ar_rev_gap",
+        "std_coefficient": -0.1026
+      },
+      {
+        "feature": "gmi",
+        "std_coefficient": -0.2421
+      }
+    ],
+    "extended": [
+      {
+        "feature": "ni_cfo_gap_rev",
+        "std_coefficient": 0.7223
+      },
+      {
+        "feature": "sgi",
+        "std_coefficient": 0.552
+      },
+      {
+        "feature": "aqi",
+        "std_coefficient": 0.4026
+      },
+      {
+        "feature": "dsri",
+        "std_coefficient": 0.3687
+      },
+      {
+        "feature": "ar_rev_gap",
+        "std_coefficient": -0.1221
+      },
+      {
+        "feature": "benford_mad",
+        "std_coefficient": -0.2848
+      },
+      {
+        "feature": "gmi",
+        "std_coefficient": -0.293
+      },
+      {
+        "feature": "tata",
+        "std_coefficient": -0.3179
+      }
+    ]
+  },
+  "jackknife_auc": {
+    "anchored": {
+      "max": 0.636029411764706,
+      "min": 0.5813782991202345
+    },
+    "beneish_fixed": {
+      "max": 0.7285539215686274,
+      "min": 0.6777546777546777
+    },
+    "core": {
+      "max": 0.7189666036546943,
+      "min": 0.6429618768328447
+    }
+  },
+  "lead": {
+    "anchored": {
+      "max_lead_years": 4.963723477070499,
+      "median_lead_quarters": 4.63791923340178,
+      "median_lead_years": 1.159479808350445,
+      "min_lead_years": 0.5941136208076659,
+      "n_cases": 14,
+      "n_detected": 8,
+      "n_flagged_any_pre_event": 8
+    },
+    "beneish_fixed": {
+      "max_lead_years": 4.963723477070499,
+      "median_lead_quarters": 3.915126625598905,
+      "median_lead_years": 0.9787816563997263,
+      "min_lead_years": 0.5941136208076659,
+      "n_cases": 14,
+      "n_detected": 8,
+      "n_flagged_any_pre_event": 9
+    },
+    "beneish_p90": {
+      "max_lead_years": 4.963723477070499,
+      "median_lead_quarters": 4.128678986995209,
+      "median_lead_years": 1.0321697467488022,
+      "min_lead_years": 0.5941136208076659,
+      "n_cases": 14,
+      "n_detected": 9,
+      "n_flagged_any_pre_event": 10
+    },
+    "core": {
+      "max_lead_years": 4.963723477070499,
+      "median_lead_quarters": 2.6830937713894594,
+      "median_lead_years": 0.6707734428473648,
+      "min_lead_years": 0.5941136208076659,
+      "n_cases": 14,
+      "n_detected": 7,
+      "n_flagged_any_pre_event": 9
+    },
+    "extended": {
+      "max_lead_years": 4.963723477070499,
+      "median_lead_quarters": 3.915126625598905,
+      "median_lead_years": 0.9787816563997263,
+      "min_lead_years": 0.5941136208076659,
+      "n_cases": 14,
+      "n_detected": 6,
+      "n_flagged_any_pre_event": 8
+    }
+  },
+  "metrics": {
+    "anchored.fpr": {
+      "estimate": 0.11688311688311688,
+      "hi": 0.1807260958728531,
+      "lo": 0.05405405405405406
+    },
+    "anchored.pr_auc": {
+      "estimate": 0.419388994397491,
+      "hi": 0.594440971052334,
+      "lo": 0.3016117051869821
+    },
+    "anchored.precision": {
+      "estimate": 0.5,
+      "hi": 0.7142857142857143,
+      "lo": 0.3125
+    },
+    "anchored.recall": {
+      "estimate": 0.3333333333333333,
+      "hi": 0.4762422360248444,
+      "lo": 0.2067241379310345
+    },
+    "anchored.roc_auc": {
+      "estimate": 0.6055796055796056,
+      "hi": 0.736066104230111,
+      "lo": 0.48439468061178587
+    },
+    "beneish_fixed.fpr": {
+      "estimate": 0.09090909090909091,
+      "hi": 0.15,
+      "lo": 0.037037037037037035
+    },
+    "beneish_fixed.pr_auc": {
+      "estimate": 0.5118979845367688,
+      "hi": 0.687736687057737,
+      "lo": 0.36324291222586924
+    },
+    "beneish_fixed.precision": {
+      "estimate": 0.6111111111111112,
+      "hi": 0.8235294117647058,
+      "lo": 0.3888888888888889
+    },
+    "beneish_fixed.recall": {
+      "estimate": 0.4074074074074074,
+      "hi": 0.5625,
+      "lo": 0.2222222222222222
+    },
+    "beneish_fixed.roc_auc": {
+      "estimate": 0.6984126984126984,
+      "hi": 0.8014195680048403,
+      "lo": 0.5920662564340725
+    },
+    "beneish_p90.fpr": {
+      "estimate": 0.11688311688311688,
+      "hi": 0.1904936974789915,
+      "lo": 0.05128205128205128
+    },
+    "beneish_p90.pr_auc": {
+      "estimate": 0.5118979845367688,
+      "hi": 0.687736687057737,
+      "lo": 0.36324291222586924
+    },
+    "beneish_p90.precision": {
+      "estimate": 0.5909090909090909,
+      "hi": 0.7894736842105263,
+      "lo": 0.4
+    },
+    "beneish_p90.recall": {
+      "estimate": 0.48148148148148145,
+      "hi": 0.6521739130434783,
+      "lo": 0.3
+    },
+    "beneish_p90.roc_auc": {
+      "estimate": 0.6984126984126984,
+      "hi": 0.8014195680048403,
+      "lo": 0.5920662564340725
+    },
+    "core.fpr": {
+      "estimate": 0.1038961038961039,
+      "hi": 0.17333333333333334,
+      "lo": 0.04493962770417575
+    },
+    "core.pr_auc": {
+      "estimate": 0.43923550555578017,
+      "hi": 0.6403323816189407,
+      "lo": 0.32602190950664106
+    },
+    "core.precision": {
+      "estimate": 0.5,
+      "hi": 0.7272727272727273,
+      "lo": 0.2777777777777778
+    },
+    "core.recall": {
+      "estimate": 0.2962962962962963,
+      "hi": 0.45454545454545453,
+      "lo": 0.14814814814814814
+    },
+    "core.roc_auc": {
+      "estimate": 0.6796536796536796,
+      "hi": 0.8107869305616983,
+      "lo": 0.5521080669710807
+    },
+    "diff_auc.anchored_minus_beneish": {
+      "estimate": -0.09283309283309282,
+      "hi": -0.047501635110243516,
+      "lo": -0.13750177893738147
+    },
+    "diff_auc.core_minus_beneish": {
+      "estimate": -0.018759018759018753,
+      "hi": 0.059528388278388154,
+      "lo": -0.09323677368121075
+    },
+    "diff_auc.extended_minus_beneish": {
+      "estimate": -0.046176046176046315,
+      "hi": 0.03793794746039817,
+      "lo": -0.1212189667761957
+    },
+    "extended.fpr": {
+      "estimate": 0.12987012987012986,
+      "hi": 0.2174052396878483,
+      "lo": 0.049984567901234574
+    },
+    "extended.pr_auc": {
+      "estimate": 0.4049989736219109,
+      "hi": 0.6112557068469968,
+      "lo": 0.2884789895202308
+    },
+    "extended.precision": {
+      "estimate": 0.4444444444444444,
+      "hi": 0.7142857142857143,
+      "lo": 0.2
+    },
+    "extended.recall": {
+      "estimate": 0.2962962962962963,
+      "hi": 0.4583333333333333,
+      "lo": 0.11538461538461539
+    },
+    "extended.roc_auc": {
+      "estimate": 0.6522366522366521,
+      "hi": 0.7730465686274509,
+      "lo": 0.5406728476034048
+    }
+  },
+  "n_boot": 2000,
+  "permutation_p": {
+    "anchored": 0.05138972205558888,
+    "beneish_fixed": 0.0009998000399920016,
+    "core": 0.007398520295940812,
+    "extended": 0.018196360727854428
+  },
+  "ppv_at_prevalence": {
+    "anchored": {
+      "0.01": 0.028,
+      "0.05": 0.13050847457627118
+    },
+    "beneish_fixed": {
+      "0.01": 0.04330708661417323,
+      "0.05": 0.19085173501577288
+    },
+    "core": {
+      "0.01": 0.027999999999999997,
+      "0.05": 0.13050847457627118
+    }
+  },
+  "sample": {
+    "fyear_max": 2018,
+    "fyear_min": 2011,
+    "n_cases": 14,
+    "n_controls": 41,
+    "n_negative_rows": 77,
+    "n_positive_rows": 27,
+    "n_rows_total": 507,
+    "positive_share": 0.25961538461538464
+  },
+  "single_signals": {
+    "aqi": {
+      "estimate": 0.5502645502645502,
+      "hi": 0.6798355716253444,
+      "lo": 0.4282892953929539,
+      "n": 104
+    },
+    "ar_rev_gap": {
+      "estimate": 0.569331983805668,
+      "hi": 0.675107048748353,
+      "lo": 0.45406790269248937,
+      "n": 102
+    },
+    "benford_mad": {
+      "estimate": 0.44925444925444924,
+      "hi": 0.5926417594064651,
+      "lo": 0.32029336607187486,
+      "n": 104
+    },
+    "depi": {
+      "estimate": 0.49446849446849445,
+      "hi": 0.6140250726225058,
+      "lo": 0.375245333410467,
+      "n": 104
+    },
+    "dsri": {
+      "estimate": 0.5639730639730639,
+      "hi": 0.6738779239766081,
+      "lo": 0.4452442337743147,
+      "n": 104
+    },
+    "gmi": {
+      "estimate": 0.46392496392496396,
+      "hi": 0.5858056275925545,
+      "lo": 0.32929778554778555,
+      "n": 104
+    },
+    "lvgi": {
+      "estimate": 0.5800865800865801,
+      "hi": 0.7039808462461344,
+      "lo": 0.4736802134646962,
+      "n": 104
+    },
+    "mscore": {
+      "estimate": 0.6984126984126984,
+      "hi": 0.7998231463053684,
+      "lo": 0.5886850493672082,
+      "n": 104
+    },
+    "ni_cfo_gap_rev": {
+      "estimate": 0.5848965848965849,
+      "hi": 0.7277207977207977,
+      "lo": 0.4512973204592585,
+      "n": 104
+    },
+    "sgai": {
+      "estimate": 0.4882154882154882,
+      "hi": 0.615322702991453,
+      "lo": 0.34315263293184484,
+      "n": 104
+    },
+    "sgi": {
+      "estimate": 0.6180856180856181,
+      "hi": 0.8336504338786948,
+      "lo": 0.4135646147159305,
+      "n": 104
+    },
+    "sloan_accruals": {
+      "estimate": 0.5659885237350025,
+      "hi": 0.7233526545698925,
+      "lo": 0.40015269477493287,
+      "n": 98
+    },
+    "tata": {
+      "estimate": 0.5810485810485809,
+      "hi": 0.7413342412063639,
+      "lo": 0.4695315027172155,
+      "n": 104
+    },
+    "total_accruals": {
+      "estimate": 0.5762385762385762,
+      "hi": 0.7410926470588235,
+      "lo": 0.46405107715464294,
+      "n": 104
+    }
+  },
+  "variants": {
+    "anchored": "Exploratory (post hoc): M-score + AR/revenue gap + Sloan accruals + NI-CFO gap",
+    "beneish_fixed": "Beneish M-score, fixed -1.78 cut-off (baseline)",
+    "beneish_p90": "Beneish M-score, cut-off = 90th pct of training controls",
+    "core": "Composite (6 signals), logistic regression",
+    "extended": "Composite + Benford MAD + NI-CFO gap"
+  }
+}

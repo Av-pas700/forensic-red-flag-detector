@@ -1,0 +1,18 @@
+company,reason,evidence
+Ener1,No XBRL financial data on EDGAR (companyfacts returns 404),EDGAR companyfacts API
+China MediaExpress,No XBRL financial data on EDGAR (companyfacts returns 404),EDGAR companyfacts API
+Swisher Hygiene,First XBRL 10-K (FY2011) was filed 2013-02 - after the 2012-03-28 Item 4.02; no pre-event XBRL 10-K,EDGAR submissions + companyfacts
+ModusLink Global Solutions,First XBRL 10-K filed 2013-01 - after the 2012-06-11 Item 4.02,EDGAR submissions + companyfacts
+Kid Brands,First XBRL 10-K filed 2012-03 - after the 2012-02-21 Item 4.02,EDGAR submissions + companyfacts
+Miller Energy Resources,First XBRL 10-K (FYE Apr-2012) filed 2012-07 - after the 2011 Item 4.02 filings,EDGAR submissions + companyfacts
+Medbox,First XBRL 10-K (FY2014) filed 2015-03 - after the 2014-12-30 Item 4.02,EDGAR submissions + companyfacts
+American Superconductor,First XBRL 10-K in the extract (FYE Mar-2012) filed 2012-06 - after the 2011-07-11 Item 4.02,EDGAR submissions + companyfacts
+Diamond Foods,First XBRL 10-K in the extract (FYE Jul-2012) filed 2012-12 - after the 2012-02-08 Item 4.02,EDGAR submissions + companyfacts
+Saba Software,No annual XBRL rows could be extracted,EDGAR companyfacts API
+USA Technologies,The misstated FY2018 10-K was filed in 2019-10 - after the 2019 Item 4.02 filings; no pre-event misstated 10-K,EDGAR submissions
+ITT Educational Services,Item 4.02 (2014-06-24) concerns consolidation from 2013-02-28; the affected FY2013 10-K was filed 2014-10 - no pre-event misstated 10-K,8-K Item 4.02 text
+Hertz Global Holdings,Verified Item 4.02 (2014-06-06) and SEC action but Beneish cannot be computed: unclassified balance sheet (no current assets/liabilities) so AQI and LVGI are undefined; dropped by the build,scripts/build_dataset.py log
+Overseas Shipholding Group,Item 4.02 (2012-10-22) and Chapter 11 verified but no SEC accounting action found; not analysed (case cap and time-box),EDGAR submissions
+Tupperware Brands,Item 4.02 (2023-03-16; tax and lease corrections) with later Chapter 11 but no SEC accounting action found; not analysed (case cap and time-box),EDGAR submissions
+Granite Construction,SEC action found (2022) but the Item 4.02 text was not parsed in the time-box; not analysed,SEC press release 2022-150
+Orthofix; Cubic; Barrett Business Services; Hill International; Tangoe; Ixia; Hanger; Mattel,Item 4.02 filings exist on EDGAR but an SEC accounting action or bankruptcy was not verified in the time-box; not analysed,EDGAR submissions

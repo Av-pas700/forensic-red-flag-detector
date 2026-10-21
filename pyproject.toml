@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "forensic-red-flag-detector"
+version = "0.1.0"
+description = "Screens US company financials for accounting-manipulation signals and tests them against real restatement cases."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "pandas>=2.0",
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "scikit-learn>=1.3",
+    "matplotlib>=3.7",
+    "requests>=2.31",
+]
+
+[project.optional-dependencies]
+app = ["streamlit>=1.30"]
+dev = ["pytest>=7.4", "ruff>=0.4"]
+report = ["markdown>=3.5", "pypdf>=4.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+src = ["src", "tests", "scripts", "app"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+"app/*" = ["E501"]
+"scripts/*" = ["E501"]
+"src/redflag/report.py" = ["E501"]
