@@ -114,3 +114,10 @@ For every case, only 10-Ks **filed strictly before** the cut-off survive into th
   enforcement actions without a restatement cannot be ruled out.
 * The case set is chosen with hindsight from well-known failures that also happened to have XBRL data; results will flatter
   any detector.
+
+## References
+
+* Beneish, M. D. (1999). The detection of earnings manipulation. *Financial Analysts Journal*, 55(5), 24-36.
+* Sloan, R. G. (1996). Do stock prices fully reflect information in accruals and cash flows about future earnings? *The Accounting Review*, 71(3), 289-315.
+* Benford, F. (1938). The law of anomalous numbers. *Proceedings of the American Philosophical Society*, 78(4), 551-572.
+* Nigrini, M. J. (2012). *Benford's Law: Applications for Forensic Accounting, Auditing, and Fraud Detection*. Wiley.

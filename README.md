@@ -127,7 +127,7 @@ loudly if one is wrong.
 | Path | Purpose |
 |---|---|
 | `src/redflag/` | `edgar` ingestion, `statements` point-in-time extraction, `features`/`benford` signals, `scoring`, `validation`, `analysis`, `plotting`, `report` |
-| `tests/` | 49 pytest tests: Beneish hand-calculation, Benford on synthetic data, no-look-ahead guards, bootstrap/CV properties |
+| `tests/` | 60 pytest tests: Beneish hand-calculation, Benford on synthetic data, no-look-ahead guards, bootstrap/CV properties |
 | `data/cases/` | hand-curated case table (`cases.csv`) and exclusions with reasons |
 | `data/processed/` | committed extracts so the analysis reproduces offline |
 | `docs/` | `methods.md`, `case_selection.md` (sources and dates), `verification.md` (hand checks) |
@@ -158,7 +158,7 @@ loudly if one is wrong.
 ## Ethics note
 
 Naming a company in a screen can harm it. Every case here has a public restatement or SEC action on the record and is cited to its
-primary source; controls are anonymous peers, not accusations. Outputs are framed as screening signals for further human review. The tool should not be used to
+primary source; controls are named only as matched peers with no restatement on record and are not accused of anything. Outputs are framed as screening signals for further human review. The tool should not be used to
 trade on, publicise or accuse; false positives are expected and are the *normal* cost of screening.
 
 ## What I would do next

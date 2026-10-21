@@ -123,7 +123,7 @@ loudly if one is wrong.
 ## Ethics note
 
 Naming a company in a screen can harm it. Every case here has a public restatement or SEC action on the record and is cited to its
-primary source; controls are anonymous peers, not accusations. Outputs are framed as screening signals for further human review. The tool should not be used to
+primary source; controls are named only as matched peers with no restatement on record and are not accused of anything. Outputs are framed as screening signals for further human review. The tool should not be used to
 trade on, publicise or accuse; false positives are expected and are the *normal* cost of screening.
 
 ## What I would do next
