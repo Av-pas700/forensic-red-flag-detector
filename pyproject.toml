@@ -19,7 +19,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-app = ["streamlit>=1.30"]
+app = ["streamlit>=1.66"]
 dev = ["pytest>=7.4", "ruff>=0.4"]
 report = ["markdown>=3.5", "pypdf>=4.0"]
 

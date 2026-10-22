@@ -140,7 +140,7 @@ with tab_watch:
             }
         )
     )
-    st.dataframe(table, hide_index=True, use_container_width=True)
+    st.dataframe(table, hide_index=True, width="stretch")
 
 with tab_company:
     names = panel.drop_duplicates("cik").sort_values("name")
@@ -168,7 +168,7 @@ with tab_company:
         ax.invert_yaxis()
         st.pyplot(fig)
         plt.close(fig)
-        st.dataframe(bd, hide_index=True, use_container_width=True)
+        st.dataframe(bd, hide_index=True, width="stretch")
         flagged = bool(row["flag_core"]) if pd.notna(row["flag_core"]) else False
         st.markdown(
             f"**Composite:** {'FLAG (elevated risk)' if flagged else 'no flag'}  |  "

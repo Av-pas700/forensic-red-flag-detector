@@ -22,3 +22,7 @@ data/raw/
 .DS_Store
 .idea/
 .vscode/
+
+# Streamlit agent skills (environment-specific symlinks installed by the streamlit CLI)
+.agents/
+.claude/
