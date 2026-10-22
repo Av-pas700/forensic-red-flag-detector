@@ -18,6 +18,8 @@ CASES_CSV = config.DATA_CASES / "cases.csv"
 
 def load_cases(path=CASES_CSV) -> pd.DataFrame:
     df = pd.read_csv(path, dtype={"first_signal_accn": str, "first_signal_date": str})
+    if "cohort" not in df:
+        df["cohort"] = "development"
     df["nonreliance_date"] = pd.to_datetime(df["nonreliance_date"])
     df["first_signal_date"] = pd.to_datetime(df["first_signal_date"])
     df["enforcement_date"] = pd.to_datetime(df["enforcement_date"])

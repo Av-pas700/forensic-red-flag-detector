@@ -35,6 +35,11 @@ FLOW_TAGS: dict[str, list[str]] = {
     ],
     # Consolidated income first: it is the like-for-like partner of consolidated operating cash flow.
     "net_income": ["ProfitLoss", "NetIncomeLoss", "NetIncomeLossAvailableToCommonStockholdersBasic"],
+    "income_cont": [
+        "IncomeLossFromContinuingOperations",
+        "IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest",
+        "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+    ],
     "cfo": [
         "NetCashProvidedByUsedInOperatingActivities",
         "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations",

@@ -257,6 +257,13 @@ and validated against {results["sample"]["n_cases"]} real US restatement cases w
 **Look-ahead discipline.** Each fiscal year is built only from the facts in that year's original 10-K, and a case
 company's filings are cut off at the earlier of its Item 4.02 date and the first verified public signal.
 
+**Holdout test.** {results["development"]["sample"]["n_cases"]} development cases were chosen from memory; {results["holdout"]["n_cases"]} holdout cases were selected mechanically from SEC enforcement releases
+under rules committed to GitHub before scoring (docs/preregistration.md). The Beneish M-score scores a ROC-AUC of
+{results["development"]["metrics"]["beneish_fixed.roc_auc"]["estimate"]:.2f} on the development cases and
+{results["holdout"]["metrics"]["beneish_fixed.roc_auc"]["estimate"]:.2f}
+[{results["holdout"]["metrics"]["beneish_fixed.roc_auc"]["lo"]:.2f}, {results["holdout"]["metrics"]["beneish_fixed.roc_auc"]["hi"]:.2f}] on the holdout:
+it did not generalise.
+
 **Honest limits.** {results["sample"]["n_positive_rows"]} misstated firm-years across {results["sample"]["n_cases"]}
 companies; selection of cases is made in hindsight; controls are screened only for Item 4.02 filings; the sample base rate
 is far higher than the real-world rate, so precision figures overstate live performance.

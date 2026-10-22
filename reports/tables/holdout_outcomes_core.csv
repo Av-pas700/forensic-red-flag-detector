@@ -1,0 +1,14 @@
+case_id,company,n_misstated_10k,n_flagged,detected,first_flag_filed,first_flag_fyear,flagged_any_pre_event_10k,n_pre_event_10k,lead_days,lead_to_4_02_days,lead_years,lead_quarters
+archerdanielsmidla,Archer-Daniels-Midland Company,3,0,False,,,True,14,,,,
+computersciencesco,Computer Sciences Corporation,1,0,False,,,True,5,,,,
+iecelectronicscorp,IEC Electronics Corp.,1,0,False,,,False,4,,,,
+ppgindustries,PPG Industries,1,0,False,,,False,9,,,,
+maxwelltechnologie,Maxwell Technologies,1,0,False,,,False,1,,,,
+borgwarnerinc,BorgWarner Inc.,3,0,False,,,True,9,,,,
+pyxusinternational,Pyxus International,2,0,False,,,False,4,,,,
+logitechinternatio,Logitech International,2,0,False,,,False,3,,,,
+manitexinternation,Manitex International,1,0,False,,,False,6,,,,
+magnachipsemicondu,MagnaChip Semiconductor Corporation,1,0,False,,,False,1,,,,
+reshapelifescience,ReShape Lifesciences Inc.,1,0,False,,,False,1,,,,
+advanceddrainagesy,Advanced Drainage Systems,1,0,False,,,False,2,,,,
+hffoodsgroupinc,HF Foods Group Inc.,2,1,True,2020-03-16,2019.0,True,3,1040.0,1040.0,2.847364818617385,11.38945927446954

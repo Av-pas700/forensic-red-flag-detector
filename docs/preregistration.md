@@ -40,3 +40,12 @@ GitHub is the evidence that the rules were not changed afterwards.
   separate project.
 * **Text signals** (MD&A language, auditor changes) are out of scope.
 * **A public ranked list of current companies:** a model with precision this low at realistic base rates must not publish named accusations. Only aggregate rates are reported.
+
+## Addendum (written after the holdout was scored; clearly post hoc)
+
+* **Primary hypothesis H1 was not supported:** the holdout M-score ROC-AUC interval includes 0.5 (numbers in `reports/results.json` under `holdout`). Nothing about the rules was changed after seeing this.
+* **Exploratory split by restatement type** (`data/cases/issue_types.csv`, `basis` column quotes what each filing says): after reading the holdout 4.02 texts I classified every case as *revenue/receivable* or *other*
+  and reported the M-score AUC for each group. This was **not pre-registered**, the classification is my judgement from filing text (made after I had seen aggregate holdout results), and it is reported as a hypothesis
+  for a fresh pre-registered test, not as a finding.
+* **Universe base-rate check** and the **continuing-operations sensitivity** were pre-registered above and are reported as written.
+

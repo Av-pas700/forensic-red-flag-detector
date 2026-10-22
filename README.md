@@ -9,57 +9,107 @@
 The tool screens US company financials from SEC EDGAR (XBRL) for accounting-manipulation signals - the Beneish M-score,
 accruals quality, receivables-versus-revenue and earnings-versus-cash-flow divergence, and a Benford first-digit test -
 and asks a practical question: *using only filings available before the problem became public, would these signals have
-flagged real companies that later restated or faced SEC accounting action?* It is validated on **14 verified US
-cases** against **41 matched healthy peers** (27 misstated and 77 control firm-years, fiscal
-2011-2018) with leave-one-company-out cross-validation and company-level bootstrap confidence intervals.
-**The honest headline is modest:** the published Beneish M-score has a ROC-AUC of 0.70 (95% CI 0.59 to 0.80), flags 8 of 14
-cases ahead of their restatement (median lead 0.98 years) at a 9% false-positive rate, and
-my refitted composite score did **not** improve on it. With this few positives the study is a *case-study validation, not
-proof of predictive power*.
+flagged real companies that later restated or faced SEC accounting action?* It is validated on **27 verified US
+cases** with **80 matched healthy peers**, using leave-one-company-out cross-validation and company-level bootstrap
+confidence intervals. To stop me fooling myself, the cases are split in two: **14 development cases** that I picked from memory and
+studied while building the models, and **13 holdout cases** selected mechanically from SEC's Accounting and Auditing Enforcement
+Release list under rules I committed to GitHub *before* scoring them (`docs/preregistration.md`), scored with rules frozen on the development set.
+**Headline:** on the development cases the published Beneish M-score has a ROC-AUC of 0.70 (95% CI 0.59 to 0.80);
+on the untouched holdout it scores 0.49 (95% CI 0.34 to 0.63). The M-score did no better than chance on unseen cases, so the development result did not generalise. My refitted composite never reliably beat the plain M-score.
+With this few independent companies the study is a *case-study validation, not proof of predictive power*.
 
 ## Key results
 
 All numbers below are written by `scripts/render_docs.py` from `reports/results.json`; `scripts/check_claims.py` fails the build if
-this README disagrees with the code output. Out-of-sample = leave-one-company-out; CIs = 2000-replicate bootstrap over companies.
+this README disagrees with the code output. The table pools all 27 cases (development + holdout) under leave-one-company-out validation, i.e. every company is scored by a model that never saw it; CIs = 2000-replicate bootstrap over companies. The next section separates the cohorts.
 
 | Model | ROC-AUC [95% CI] | PR-AUC [95% CI] | Recall (misstated 10-Ks) | False-positive rate (control 10-Ks) | Cases flagged pre-event |
 |---|---|---|---|---|---|
-| Beneish M-score > -1.78 (baseline) | 0.70 [0.59, 0.80] | 0.51 [0.36, 0.69] | 41% | 9% | 8 of 14 |
-| Composite, 6 signals (pre-specified) | 0.68 [0.55, 0.81] | 0.44 [0.33, 0.64] | 30% | 10% | 7 of 14 |
-| Composite + Benford + NI-CFO gap | 0.65 [0.54, 0.77] | 0.40 [0.29, 0.61] | 30% | 13% | 6 of 14 |
-| M-score + 3 signals (post hoc, exploratory) | 0.61 [0.48, 0.74] | 0.42 [0.30, 0.59] | 33% | 12% | 8 of 14 |
+| Beneish M-score > -1.78 (baseline) | 0.61 [0.51, 0.70] | 0.42 [0.30, 0.58] | 28% | 7% | 10 of 27 |
+| Composite, 6 signals (pre-specified) | 0.55 [0.44, 0.67] | 0.34 [0.24, 0.50] | 21% | 12% | 8 of 27 |
+| Composite + Benford + NI-CFO gap | 0.60 [0.50, 0.69] | 0.36 [0.25, 0.53] | 28% | 12% | 9 of 27 |
+| M-score + 3 signals (post hoc, exploratory) | 0.44 [0.35, 0.52] | 0.28 [0.21, 0.40] | 21% | 11% | 8 of 27 |
 
-* Evaluation sample: 27 misstated vs 77 control firm-years from 14 case and 41 control companies, so
+* Evaluation sample: 47 misstated vs 137 control firm-years from 27 case and 80 control companies, so
   26% of rows are positives. That is far above any real-world base rate, so **precision figures flatter live
-  performance**: at an assumed 1% prevalence the baseline's implied precision is 4.3% (at 5%: 19.1%).
+  performance**: at an assumed 1% prevalence the baseline's implied precision is 3.7% (at 5%: 16.6%).
   These implied figures are arithmetic on the sample's recall and false-positive rate, not measurements.
-* The pre-specified composite was statistically indistinguishable from the published baseline (ROC-AUC difference -0.02, 95% CI -0.09 to 0.06).
-* The extended composite was statistically indistinguishable from the published baseline (ROC-AUC difference -0.05, 95% CI -0.12 to 0.04).
-* The post-hoc anchored composite ranked misstated years WORSE than the published baseline (ROC-AUC difference -0.09, 95% CI -0.14 to -0.05). (This variant was added *after* seeing the pre-specified model underperform, so it is exploratory.)
-* Permutation p-values for ROC-AUC (labels shuffled across companies): baseline <0.001, composite 0.007.
-  Both rank misstated years better than chance would, although the confidence intervals are wide. Dropping any single case moves the baseline AUC within 0.68 to 0.73.
+* The pre-specified composite was statistically indistinguishable from the published baseline (ROC-AUC difference -0.06, 95% CI -0.17 to 0.06).
+* The extended composite was statistically indistinguishable from the published baseline (ROC-AUC difference -0.01, 95% CI -0.13 to 0.11).
+* The post-hoc anchored composite ranked misstated years WORSE than the published baseline (ROC-AUC difference -0.17, 95% CI -0.25 to -0.10). (This variant was added *after* seeing the pre-specified model underperform, so it is exploratory.)
+* Permutation p-values for ROC-AUC (labels shuffled across companies): baseline 0.016, composite 0.174.
+  Only the baseline ranks misstated years better than chance would. Dropping any single case moves the baseline AUC within 0.59 to 0.62.
 * Where each test stands alone (raw signal, higher = riskier):
 
 | Signal (raw, higher = riskier) | ROC-AUC [95% CI] |
 |---|---|
-| mscore | 0.70 [0.59, 0.80] |
-| sgi | 0.62 [0.41, 0.83] |
-| ni_cfo_gap_rev | 0.58 [0.45, 0.73] |
-| tata | 0.58 [0.47, 0.74] |
-| lvgi | 0.58 [0.47, 0.70] |
-| total_accruals | 0.58 [0.46, 0.74] |
-| ar_rev_gap | 0.57 [0.45, 0.68] |
-| sloan_accruals | 0.57 [0.40, 0.72] |
-| dsri | 0.56 [0.45, 0.67] |
-| aqi | 0.55 [0.43, 0.68] |
-| depi | 0.49 [0.38, 0.61] |
-| sgai | 0.49 [0.34, 0.62] |
-| gmi | 0.46 [0.33, 0.59] |
-| benford_mad | 0.45 [0.32, 0.59] |
+| mscore_ops | 0.61 [0.51, 0.70] |
+| mscore | 0.61 [0.51, 0.70] |
+| sgi | 0.58 [0.42, 0.73] |
+| ni_cfo_gap_rev | 0.56 [0.46, 0.66] |
+| tata_ops | 0.55 [0.45, 0.65] |
+| ar_rev_gap | 0.54 [0.46, 0.62] |
+| dsri | 0.54 [0.46, 0.62] |
+| sloan_accruals | 0.53 [0.40, 0.65] |
+| tata | 0.53 [0.44, 0.64] |
+| total_accruals | 0.53 [0.43, 0.64] |
+| sgai | 0.53 [0.42, 0.63] |
+| lvgi | 0.52 [0.42, 0.61] |
+| aqi | 0.51 [0.41, 0.60] |
+| depi | 0.50 [0.41, 0.58] |
+| gmi | 0.44 [0.34, 0.53] |
+| benford_mad | 0.43 [0.33, 0.54] |
 
-* **Benford:** the first-digit test did **not** separate misstated from control filings (median MAD 0.0146 vs 0.0153;
-  44% vs 51% of filings "nonconforming"). Filings hold about 315 reported values, mostly
+* **Benford:** the first-digit test did **not** separate misstated from control filings (median MAD 0.0144 vs 0.0155;
+  43% vs 53% of filings "nonconforming"). Filings hold about 346 reported values, mostly
   sums and rounded totals, so it is a weak filing-level test and I would not use it alone.
+
+### Does it generalise? The untouched holdout
+
+| Model | Development cases (LOCO) | Holdout cases (frozen rules) | Pooled (LOCO) |
+|---|---|---|---|
+| Beneish M-score > -1.78: ROC-AUC [95% CI] | 0.70 [0.59, 0.80] | 0.49 [0.34, 0.63] | 0.61 [0.51, 0.70] |
+| Composite, 6 signals: ROC-AUC [95% CI] | 0.68 [0.55, 0.81] | 0.48 [0.32, 0.63] | 0.55 [0.44, 0.67] |
+| Beneish M-score > -1.78: recall / false-positive rate | 41% / 9% | 10% / 5% | 28% / 7% |
+| Beneish M-score > -1.78: cases flagged before cut-off | 8 of 14 | 2 of 13 | 10 of 27 |
+| Composite, 6 signals: recall / false-positive rate | 30% / 10% | 5% / 5% | 21% / 12% |
+| Composite, 6 signals: cases flagged before cut-off | 7 of 14 | 1 of 13 | 8 of 27 |
+
+* Holdout: 20 misstated and 60 control firm-years from 13 cases and 39 controls. The frozen composite's interval includes chance.
+  Frozen composite minus baseline on the holdout: ROC-AUC difference -0.01 (95% CI -0.12 to 0.09). Permutation p-value for the baseline on the holdout: 0.548.
+* The holdout cases are mechanical, so they include restatements the M-score has no reason to catch (for example a segment-reporting restatement that leaves consolidated numbers unchanged).
+  That is the point: a prospective screen faces the same mixture.
+
+![Development vs holdout](reports/figures/fig7_generalisation.png)
+
+| Holdout case | Misstated 10-Ks scored | Item 4.02 filed | Beneish flag: lead (yrs) | Composite flag: lead (yrs) |
+|---|---|---|---|---|
+| Maxwell Technologies | 1 | 2013-03-07 | not flagged | not flagged |
+| MagnaChip Semiconductor Corporation | 1 | 2014-03-11 | 1.0 | not flagged |
+| Logitech International | 2 | 2014-09-04 | not flagged | not flagged |
+| Computer Sciences Corporation | 1 | 2014-12-29 | not flagged | not flagged |
+| IEC Electronics Corp. | 1 | 2015-02-09 | not flagged | not flagged |
+| Pyxus International | 2 | 2016-02-19 | not flagged | not flagged |
+| Advanced Drainage Systems | 1 | 2016-11-29 | not flagged | not flagged |
+| Manitex International | 1 | 2017-11-06 | not flagged | not flagged |
+| PPG Industries | 1 | 2018-05-10 | not flagged | not flagged |
+| BorgWarner Inc. | 3 | 2018-06-15 | not flagged | not flagged |
+| HF Foods Group Inc. | 2 | 2023-01-20 | 2.8 | 2.8 |
+| ReShape Lifesciences Inc. | 1 | 2023-04-13 | not flagged | not flagged |
+| Archer-Daniels-Midland Company | 3 | 2024-11-05 | not flagged | not flagged |
+
+### How often does the M-score flag an ordinary company?
+
+Using the XBRL `frames` API, I scored **every US calendar-year filer with a classified balance sheet and complete inputs** (2,777 in 2015,
+2,502 in 2019) and counted how many exceed the -1.78 cut-off: **12% in 2015 and 19% in 2019**. That is higher than the false-positive rate
+among my matched controls (7%), so the realistic false-alarm rate is probably worse than the control sample suggests. Taking the universe flag rate as the
+false-alarm rate, a 1% manipulation prevalence implies a precision of about 2.3% (2015) to 1.5% (2019). These universe values are as currently reported, not original, and
+some flagged firms may truly have problems, so treat the figure as a sanity check on the base rate, not a measurement of precision.
+
+### Sensitivity: income from continuing operations
+
+Replacing net income by income from continuing operations in TATA (so one-off gains and discontinued operations stop distorting accruals) gives an M-score ROC-AUC of 0.61 (95% CI 0.51 to 0.70); difference from the
+baseline 0.00 (95% CI -0.02 to 0.02). Using continuing-operations income did not change the conclusion.
 
 ### Case-by-case lead times
 
@@ -70,18 +120,31 @@ earlier verified public signal).
 |---|---|---|---|---|
 | Stein Mart | 1 | 2012-11-09 | not flagged | not flagged |
 | KIT digital | 1 | 2012-11-21 | 0.6 | 0.6 |
+| Maxwell Technologies | 1 | 2013-03-07 | not flagged | not flagged |
 | UniTek Global Services | 1 | 2013-04-12 | not flagged | not flagged |
+| MagnaChip Semiconductor Corporation | 1 | 2014-03-11 | 1.0 | not flagged |
+| Logitech International | 2 | 2014-09-04 | not flagged | not flagged |
+| Computer Sciences Corporation | 1 | 2014-12-29 | not flagged | not flagged |
+| IEC Electronics Corp. | 1 | 2015-02-09 | not flagged | not flagged |
+| Pyxus International | 2 | 2016-02-19 | not flagged | not flagged |
 | Osiris Therapeutics | 1 | 2016-03-15 | 0.7 | 0.7 |
 | Valeant Pharmaceuticals | 1 | 2016-03-21 | not flagged | not flagged |
+| Advanced Drainage Systems | 1 | 2016-11-29 | not flagged | not flagged |
 | Roadrunner Transportation Systems | 2 | 2017-01-30 | not flagged | not flagged |
-| Celadon Group | 1 | 2017-05-01 | 0.6 | 0.6 |
+| Celadon Group | 1 | 2017-05-01 | 0.6 | not flagged |
 | Synchronoss Technologies | 2 | 2017-06-13 | not flagged | not flagged |
+| Manitex International | 1 | 2017-11-06 | not flagged | not flagged |
+| PPG Industries | 1 | 2018-05-10 | not flagged | not flagged |
 | MiMedx Group | 5 | 2018-06-07 | 5.0 | 5.0 |
+| BorgWarner Inc. | 3 | 2018-06-15 | not flagged | not flagged |
 | Quantum Corp | 3 | 2018-09-14 | 1.3 | 1.3 |
 | Super Micro Computer | 2 | 2018-11-15 | 3.2 | not flagged |
 | Kraft Heinz | 2 | 2019-05-06 | not flagged | not flagged |
 | SAExploration Holdings | 4 | 2019-08-16 | 2.4 | 2.4 |
 | Pareteum | 1 | 2019-10-21 | 0.6 | 0.6 |
+| HF Foods Group Inc. | 2 | 2023-01-20 | 2.8 | 2.8 |
+| ReShape Lifesciences Inc. | 1 | 2023-04-13 | not flagged | 1.0 |
+| Archer-Daniels-Midland Company | 3 | 2024-11-05 | not flagged | not flagged |
 
 ![Case timelines](reports/figures/fig2_case_timelines.png)
 ![ROC and PR](reports/figures/fig1_roc_pr.png)
@@ -127,10 +190,10 @@ loudly if one is wrong.
 | Path | Purpose |
 |---|---|
 | `src/redflag/` | `edgar` ingestion, `statements` point-in-time extraction, `features`/`benford` signals, `scoring`, `validation`, `analysis`, `plotting`, `report` |
-| `tests/` | 60 pytest tests: Beneish hand-calculation, Benford on synthetic data, no-look-ahead guards, bootstrap/CV properties |
+| `tests/` | 72 pytest tests: Beneish hand-calculation, Benford on synthetic data, no-look-ahead guards, bootstrap/CV properties |
 | `data/cases/` | hand-curated case table (`cases.csv`) and exclusions with reasons |
 | `data/processed/` | committed extracts so the analysis reproduces offline |
-| `docs/` | `methods.md`, `case_selection.md` (sources and dates), `verification.md` (hand checks) |
+| `docs/` | `methods.md`, `preregistration.md` (holdout rules fixed before scoring), `case_selection.md` (sources and dates), `verification.md` (hand checks) |
 | `reports/` | `memo.md` / `memo.pdf` (2 pages), `results.json`, figures, tables |
 | `app/dashboard.py` | Streamlit dashboard |
 | `DECISIONS.md` | every judgement call with a one-line reason |
@@ -144,16 +207,17 @@ loudly if one is wrong.
 
 ## Limitations
 
-* **Small sample, hindsight selection.** 14 cases picked from well-known failures that also had XBRL coverage; results flatter any detector.
-  The confidence intervals are wide and there are only a handful of independent companies.
+* **Few independent companies; two kinds of selection.** The 14 development cases were picked from memory of famous failures (hindsight) and also used to build the models. The 13 holdout
+  cases are mechanical (SEC accounting-enforcement releases that also have an Item 4.02 and usable XBRL), so they are the fair test - but they still exclude firms without XBRL, without an enforcement release,
+  or never caught. Confidence intervals are wide.
 * **Controls are not certified clean.** They are US non-financial peers matched on industry, size and fiscal year with no Item 4.02 filing in
-  their EDGAR history; undisclosed restatements or SEC action cannot be ruled out. Matching tiers: 21 at 3-digit SIC, 11 at SIC division, 9 at 2-digit SIC.
+  their EDGAR history; undisclosed restatements or SEC action cannot be ruled out. Matching tiers: 39 at 3-digit SIC, 28 at 2-digit SIC, 13 at SIC division.
 * **Sample base rate is unrealistic**, so precision is inflated relative to live use.
 * **Heterogeneous misstatements.** Revenue-recognition fraud, tax and inventory errors look different in the numbers; the M-score was fitted on earnings-overstatement cases.
 * **Look-ahead discipline limits:** original 10-Ks only, cut-off at the earlier of the Item 4.02 date and a verified earlier signal; I could verify an earlier signal for only some cases.
 * **Net income, not continuing-operations income**, enters TATA, so one-off gains (e.g. 2017 tax reform) distort it.
 * Hertz (verified case) was dropped because its unclassified balance sheet makes two Beneish indices undefined; others dropped for missing pre-event XBRL (`docs/case_selection.md`).
-* The pre-specified composite is refitted with about 27 positives; no tuning was done, and none would be reliable at this size.
+* The pre-specified composite is refitted with about 47 positives; no tuning was done, and none would be reliable at this size.
 
 ## Ethics note
 
@@ -163,11 +227,12 @@ trade on, publicise or accuse; false positives are expected and are the *normal*
 
 ## What I would do next
 
-1. Widen the sample (more years, more restatement types, SPAC-era restatements) and add quarterly 10-Q signals, where labelled periods are shorter.
-2. Pre-register the model and threshold, then score **prospectively** each filing season and report realised hit rates against a realistic base rate.
-3. Use income from continuing operations and industry-adjusted indices (z-scores within SIC groups) to cut false positives from M&A and cyclicality.
+1. **Test the one hypothesis the data suggest, properly:** the M-score may only work for revenue/receivable-type restatements (exploratory split above). Pre-register it and test it on a fresh sample of such cases, e.g. every
+   revenue-related Item 4.02 filing, not only those that reached an SEC release.
+2. Replace the matched-control false-positive rate with the universe flag rate everywhere, and calibrate a threshold for a stated base rate and cost ratio (decision curves for an audit-committee audience).
+3. Add quarterly (10-Q) signals - needs year-to-date cash-flow handling and quarter-level labels, so it is a separate piece of work - and industry-adjusted indices to cut false positives from M&A and cyclicality.
 4. Add text signals (MD&A language, auditor changes, late-filing notices) that often precede restatements and are independent of the numbers.
-5. Calibrate the composite probabilistically and report cost-weighted decision curves for an audit-committee audience.
+5. Score prospectively each filing season with the frozen rule and publish only aggregate hit rates (no named lists: precision this low would mostly accuse honest firms).
 
 ## Licence
 

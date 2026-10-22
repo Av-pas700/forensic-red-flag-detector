@@ -10,17 +10,18 @@ The tool screens US company financials from SEC EDGAR (XBRL) for accounting-mani
 accruals quality, receivables-versus-revenue and earnings-versus-cash-flow divergence, and a Benford first-digit test -
 and asks a practical question: *using only filings available before the problem became public, would these signals have
 flagged real companies that later restated or faced SEC accounting action?* It is validated on **{{n_cases}} verified US
-cases** against **{{n_controls}} matched healthy peers** ({{n_pos}} misstated and {{n_neg}} control firm-years, fiscal
-{{fy_min}}-{{fy_max}}) with leave-one-company-out cross-validation and company-level bootstrap confidence intervals.
-**The honest headline is modest:** the published Beneish M-score has a ROC-AUC of {{auc_beneish_fixed_full}}, flags {{det_beneish_fixed}}
-cases ahead of their restatement (median lead {{lead_med_y_beneish_fixed}} years) at a {{fpr_beneish_fixed}} false-positive rate, and
-my refitted composite score did **not** improve on it. With this few positives the study is a *case-study validation, not
-proof of predictive power*.
+cases** with **{{n_controls}} matched healthy peers**, using leave-one-company-out cross-validation and company-level bootstrap
+confidence intervals. To stop me fooling myself, the cases are split in two: **{{d_n_cases}} development cases** that I picked from memory and
+studied while building the models, and **{{h_n_cases}} holdout cases** selected mechanically from SEC's Accounting and Auditing Enforcement
+Release list under rules I committed to GitHub *before* scoring them (`docs/preregistration.md`), scored with rules frozen on the development set.
+**Headline:** on the development cases the published Beneish M-score has a ROC-AUC of {{d_auc_beneish_fixed_full}};
+on the untouched holdout it scores {{h_auc_beneish_fixed_full}}. {{h_reading}} My refitted composite never reliably beat the plain M-score.
+With this few independent companies the study is a *case-study validation, not proof of predictive power*.
 
 ## Key results
 
 All numbers below are written by `scripts/render_docs.py` from `reports/results.json`; `scripts/check_claims.py` fails the build if
-this README disagrees with the code output. Out-of-sample = leave-one-company-out; CIs = {{n_boot}}-replicate bootstrap over companies.
+this README disagrees with the code output. The table pools all {{n_cases}} cases (development + holdout) under leave-one-company-out validation, i.e. every company is scored by a model that never saw it; CIs = {{n_boot}}-replicate bootstrap over companies. The next section separates the cohorts.
 
 {{table_models}}
 
@@ -40,6 +41,32 @@ this README disagrees with the code output. Out-of-sample = leave-one-company-ou
 * **Benford:** the first-digit test did **not** separate misstated from control filings (median MAD {{bf_med_cases}} vs {{bf_med_controls}};
   {{bf_nonconf_cases}} vs {{bf_nonconf_controls}} of filings "nonconforming"). Filings hold about {{bf_med_n}} reported values, mostly
   sums and rounded totals, so it is a weak filing-level test and I would not use it alone.
+
+### Does it generalise? The untouched holdout
+
+{{table_generalisation}}
+
+* Holdout: {{h_n_pos}} misstated and {{h_n_neg}} control firm-years from {{h_n_cases}} cases and {{h_n_controls}} controls. {{h_core_reading}}
+  Frozen composite minus baseline on the holdout: ROC-AUC difference {{h_diff_core}}. Permutation p-value for the baseline on the holdout: {{h_perm_beneish_fixed}}.
+* The holdout cases are mechanical, so they include restatements the M-score has no reason to catch (for example a segment-reporting restatement that leaves consolidated numbers unchanged).
+  That is the point: a prospective screen faces the same mixture.
+
+![Development vs holdout](reports/figures/fig7_generalisation.png)
+
+{{table_holdout_cases}}
+
+### How often does the M-score flag an ordinary company?
+
+Using the XBRL `frames` API, I scored **every US calendar-year filer with a classified balance sheet and complete inputs** ({{u_n_2015}} in 2015,
+{{u_n_2019}} in 2019) and counted how many exceed the {{beneish_threshold}} cut-off: **{{u_flag_2015}} in 2015 and {{u_flag_2019}} in 2019**. That is higher than the false-positive rate
+among my matched controls ({{fpr_beneish_fixed}}), so the realistic false-alarm rate is probably worse than the control sample suggests. Taking the universe flag rate as the
+false-alarm rate, a 1% manipulation prevalence implies a precision of about {{ppv_univ_1_2015}} (2015) to {{ppv_univ_1_2019}} (2019). These universe values are as currently reported, not original, and
+some flagged firms may truly have problems, so treat the figure as a sanity check on the base rate, not a measurement of precision.
+
+### Sensitivity: income from continuing operations
+
+Replacing net income by income from continuing operations in TATA (so one-off gains and discontinued operations stop distorting accruals) gives an M-score ROC-AUC of {{ops_auc_full}}; difference from the
+baseline {{ops_diff_full}}. {{ops_reading}}
 
 ### Case-by-case lead times
 
@@ -95,7 +122,7 @@ loudly if one is wrong.
 | `tests/` | {{n_tests}} pytest tests: Beneish hand-calculation, Benford on synthetic data, no-look-ahead guards, bootstrap/CV properties |
 | `data/cases/` | hand-curated case table (`cases.csv`) and exclusions with reasons |
 | `data/processed/` | committed extracts so the analysis reproduces offline |
-| `docs/` | `methods.md`, `case_selection.md` (sources and dates), `verification.md` (hand checks) |
+| `docs/` | `methods.md`, `preregistration.md` (holdout rules fixed before scoring), `case_selection.md` (sources and dates), `verification.md` (hand checks) |
 | `reports/` | `memo.md` / `memo.pdf` (2 pages), `results.json`, figures, tables |
 | `app/dashboard.py` | Streamlit dashboard |
 | `DECISIONS.md` | every judgement call with a one-line reason |
@@ -109,8 +136,9 @@ loudly if one is wrong.
 
 ## Limitations
 
-* **Small sample, hindsight selection.** {{n_cases}} cases picked from well-known failures that also had XBRL coverage; results flatter any detector.
-  The confidence intervals are wide and there are only a handful of independent companies.
+* **Few independent companies; two kinds of selection.** The {{d_n_cases}} development cases were picked from memory of famous failures (hindsight) and also used to build the models. The {{h_n_cases}} holdout
+  cases are mechanical (SEC accounting-enforcement releases that also have an Item 4.02 and usable XBRL), so they are the fair test - but they still exclude firms without XBRL, without an enforcement release,
+  or never caught. Confidence intervals are wide.
 * **Controls are not certified clean.** They are US non-financial peers matched on industry, size and fiscal year with no Item 4.02 filing in
   their EDGAR history; undisclosed restatements or SEC action cannot be ruled out. Matching tiers: {{match_tiers}}.
 * **Sample base rate is unrealistic**, so precision is inflated relative to live use.
@@ -128,11 +156,12 @@ trade on, publicise or accuse; false positives are expected and are the *normal*
 
 ## What I would do next
 
-1. Widen the sample (more years, more restatement types, SPAC-era restatements) and add quarterly 10-Q signals, where labelled periods are shorter.
-2. Pre-register the model and threshold, then score **prospectively** each filing season and report realised hit rates against a realistic base rate.
-3. Use income from continuing operations and industry-adjusted indices (z-scores within SIC groups) to cut false positives from M&A and cyclicality.
+1. **Test the one hypothesis the data suggest, properly:** the M-score may only work for revenue/receivable-type restatements (exploratory split above). Pre-register it and test it on a fresh sample of such cases, e.g. every
+   revenue-related Item 4.02 filing, not only those that reached an SEC release.
+2. Replace the matched-control false-positive rate with the universe flag rate everywhere, and calibrate a threshold for a stated base rate and cost ratio (decision curves for an audit-committee audience).
+3. Add quarterly (10-Q) signals - needs year-to-date cash-flow handling and quarter-level labels, so it is a separate piece of work - and industry-adjusted indices to cut false positives from M&A and cyclicality.
 4. Add text signals (MD&A language, auditor changes, late-filing notices) that often precede restatements and are independent of the numbers.
-5. Calibrate the composite probabilistically and report cost-weighted decision curves for an audit-committee audience.
+5. Score prospectively each filing season with the frozen rule and publish only aggregate hit rates (no named lists: precision this low would mostly accuse honest firms).
 
 ## Licence
 

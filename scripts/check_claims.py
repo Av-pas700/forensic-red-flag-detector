@@ -15,7 +15,7 @@ import math
 import sys
 
 from redflag import config
-from redflag.analysis import run_analysis
+from redflag.analysis import run_full
 from redflag.data_io import load_processed, to_jsonable
 from redflag.report import render_all
 from redflag.validation import assert_no_lookahead, build_panel
@@ -46,7 +46,9 @@ def main() -> int:
     fin, companies, cases = load_processed()
     panel = build_panel(fin, companies, cases)
     assert_no_lookahead(panel, cases)
-    fresh = to_jsonable(run_analysis(panel, cases)["results"])
+    fresh = to_jsonable(
+        run_full(panel, cases, universe_path=config.DATA_PROCESSED / "universe.json")["results"]
+    )
     on_disk = json.loads((config.REPORTS / "results.json").read_text())
     failures += [f"results.json stale: {d}" for d in _diff(fresh, on_disk)]
 

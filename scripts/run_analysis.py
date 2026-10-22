@@ -8,7 +8,7 @@ from __future__ import annotations
 import pandas as pd
 
 from redflag import config, plotting
-from redflag.analysis import run_analysis
+from redflag.analysis import run_full
 from redflag.data_io import load_processed, write_json
 from redflag.validation import assert_no_lookahead, build_panel
 
@@ -18,7 +18,7 @@ def main() -> None:
     panel = build_panel(fin, companies, cases)
     assert_no_lookahead(panel, cases)
 
-    out = run_analysis(panel, cases)
+    out = run_full(panel, cases, universe_path=config.DATA_PROCESSED / "universe.json")
     results, tables, scored, ev_index = out["results"], out["tables"], out["scored"], out["eval_index"]
     ev = panel.loc[ev_index]
 
@@ -46,6 +46,8 @@ def main() -> None:
     plotting.plot_mscore(ev, results["beneish_threshold"], fdir / "fig4_mscore_distribution.png")
     plotting.plot_benford(ev, fdir / "fig5_benford.png")
     plotting.plot_single_signals(results, fdir / "fig6_single_signals.png")
+    plotting.plot_generalisation(results, fdir / "fig7_generalisation.png")
+    plotting.plot_holdout_roc(out["holdout"], panel, results, fdir / "fig8_holdout_roc.png")
     print(pd.Series(results["sample"]).to_string())
 
 

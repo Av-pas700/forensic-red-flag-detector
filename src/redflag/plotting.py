@@ -201,3 +201,46 @@ def plot_single_signals(results: dict, path: Path) -> Path:
     ax.set_yticks(np.arange(len(names)), names)
     ax.set_xlabel("ROC-AUC of the raw signal (higher value = riskier); 95% cluster-bootstrap CI")
     return _save(fig, path)
+
+
+def plot_generalisation(results: dict, path: Path) -> Path:
+    """ROC-AUC with 95% CI: development (LOCO), untouched holdout (frozen rules) and pooled (LOCO)."""
+    rows = []
+    for model, label in (("beneish_fixed", "Beneish M-score"), ("core", "Composite (core)")):
+        for cohort, d in (
+            ("Development cases (LOCO)", results["development"]["metrics"]),
+            ("Holdout cases (frozen rules)", results["holdout"]["metrics"]),
+            ("Pooled (LOCO)", results["metrics"]),
+        ):
+            rows.append((f"{label}: {cohort}", d[f"{model}.roc_auc"], PALETTE[model]))
+    fig, ax = plt.subplots(figsize=(7.5, 3.6))
+    for i, (_lab, d, colour) in enumerate(rows[::-1]):
+        ax.errorbar(
+            d["estimate"],
+            i,
+            xerr=[[d["estimate"] - d["lo"]], [d["hi"] - d["estimate"]]],
+            fmt="o",
+            color=colour,
+            capsize=3,
+        )
+    ax.axvline(0.5, color="k", ls=":")
+    ax.set_yticks(range(len(rows)), [r[0] for r in rows[::-1]], fontsize=7.5)
+    ax.set_xlabel("ROC-AUC (95% company-level bootstrap CI); dotted = chance")
+    return _save(fig, path)
+
+
+def plot_holdout_roc(hold: dict, panel: pd.DataFrame, results: dict, path: Path) -> Path:
+    ev = panel.loc[hold["index"]]
+    y = ev["label"].to_numpy().astype(int)
+    fig, ax = plt.subplots(figsize=(4.8, 4.0))
+    for k, label in (("beneish_fixed", "Beneish M-score"), ("core", "Composite (frozen)")):
+        s = hold["scored"][k].loc[ev.index, "score"].to_numpy()
+        fpr, tpr, _ = roc_curve(y, s)
+        a = results["holdout"]["metrics"][f"{k}.roc_auc"]
+        ax.plot(
+            fpr, tpr, color=PALETTE[k], label=f"{label}: {a['estimate']:.2f} [{a['lo']:.2f}, {a['hi']:.2f}]"
+        )
+    ax.plot([0, 1], [0, 1], ls=":", color="k", lw=0.8)
+    ax.set(xlabel="False-positive rate", ylabel="True-positive rate", title="Untouched holdout cases")
+    ax.legend(fontsize=7, loc="lower right")
+    return _save(fig, path)

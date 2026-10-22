@@ -27,6 +27,8 @@ VARIANTS = {
 }
 LR_VARIANTS = ("core", "extended", "anchored")
 SINGLE_SIGNALS = [
+    "mscore_ops",
+    "tata_ops",
     "mscore",
     "dsri",
     "gmi",
@@ -113,6 +115,46 @@ def run_analysis(panel: pd.DataFrame, cases: pd.DataFrame, n_boot: int = N_BOOT)
         b = cluster_bootstrap(groups[ok], y_ok, _single_auc(sig_vals, y_ok), n_boot=500)
         singles[sig] = {"n": int(ok.sum()), **b["roc_auc"]}
 
+    # -- sensitivity: TATA from income from continuing operations instead of net income
+    ops = ev["mscore_ops"].to_numpy()
+    base_m = ev["mscore"].to_numpy()
+
+    def _ops_fn(ix):
+        return {
+            "diff": roc_auc(y[ix], ops[ix]) - roc_auc(y[ix], base_m[ix]),
+            "auc_ops": roc_auc(y[ix], ops[ix]),
+        }
+
+    sens_ops = cluster_bootstrap(groups, y, _ops_fn, n_boot=n_boot, seed=21)
+
+    case_of = ev["case_id"].to_numpy()
+    # -- exploratory (post hoc): does the screen work only for revenue/receivable-type restatements?
+    by_type: dict[str, dict] = {}
+    if "issue_type" in cases:
+        tmap = cases.set_index("case_id")["issue_type"]
+        ev_type = ev["case_id"].map(tmap).to_numpy()
+        for t in ("revenue", "other"):
+            sel = ev_type == t
+            if sel.sum() == 0 or len(set(y[sel])) < 2:
+                continue
+
+            def _fn(ix, sel=sel):
+                yy = y[sel][ix]
+                out = {}
+                for k in ("beneish_fixed", "core"):
+                    out[f"{k}.roc_auc"] = roc_auc(yy, scores[k][sel][ix])
+                    cm = confusion_metrics(yy, flags[k][sel][ix])
+                    out[f"{k}.recall"], out[f"{k}.fpr"] = cm["recall"], cm["fpr"]
+                return out
+
+            b = cluster_bootstrap(groups[sel], y[sel], _fn, n_boot=n_boot, seed=31)
+            by_type[t] = {
+                "n_cases": int(len(set(case_of[sel & (y == 1)]))),
+                "n_positive_rows": int(y[sel].sum()),
+                "n_negative_rows": int((1 - y[sel]).sum()),
+                **b,
+            }
+
     # -- case-level outcomes and lead times
     outcomes = {k: case_outcomes(panel, scored[k], cases) for k in scored}
 
@@ -131,7 +173,6 @@ def run_analysis(panel: pd.DataFrame, cases: pd.DataFrame, n_boot: int = N_BOOT)
     lead = {k: lead_summary(v) for k, v in outcomes.items()}
 
     # -- leave-one-case-out sensitivity of the (out-of-company) AUC
-    case_of = ev["case_id"].to_numpy()
     jack = {}
     for k in ("beneish_fixed", "core", "anchored"):
         vals = []
@@ -185,6 +226,8 @@ def run_analysis(panel: pd.DataFrame, cases: pd.DataFrame, n_boot: int = N_BOOT)
         "ppv_at_prevalence": ppv,
         "benford": benford,
         "coefficients": coefs,
+        "sensitivity_ops": sens_ops,
+        "by_issue_type": by_type,
         "beneish_threshold": BENEISH_THRESHOLD,
         "n_boot": n_boot,
     }
@@ -196,3 +239,43 @@ def run_analysis(panel: pd.DataFrame, cases: pd.DataFrame, n_boot: int = N_BOOT)
         "case_outcomes_extended": outcomes["extended"],
     }
     return {"results": results, "tables": tables, "scored": scored, "eval_index": ev.index}
+
+
+def _subset(res: dict) -> dict:
+    return {
+        "sample": res["sample"],
+        "metrics": res["metrics"],
+        "lead": res["lead"],
+        "permutation_p": res["permutation_p"],
+    }
+
+
+def run_full(panel: pd.DataFrame, cases: pd.DataFrame, n_boot: int = N_BOOT, universe_path=None) -> dict:
+    """Pooled leave-one-company-out analysis + development-only replication + frozen holdout test."""
+    import json
+    from pathlib import Path
+
+    from .holdout import evaluate_holdout
+
+    pooled = run_analysis(panel, cases, n_boot)
+    res = pooled["results"]
+    tables = dict(pooled["tables"])
+
+    dev_cases = cases[cases["cohort"] == "development"]
+    dev = run_analysis(panel[panel["case_id"].isin(dev_cases["case_id"])], dev_cases, n_boot)
+    res["development"] = _subset(dev["results"])
+
+    hold = evaluate_holdout(panel, cases, n_boot)
+    res["holdout"] = hold["results"]
+    for k, df in hold["outcomes"].items():
+        tables[f"holdout_outcomes_{k}"] = df
+
+    if universe_path is not None and Path(universe_path).is_file():
+        res["universe"] = json.loads(Path(universe_path).read_text())
+    return {
+        "results": res,
+        "tables": tables,
+        "scored": pooled["scored"],
+        "eval_index": pooled["eval_index"],
+        "holdout": hold,
+    }

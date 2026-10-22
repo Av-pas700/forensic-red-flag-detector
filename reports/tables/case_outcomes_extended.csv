@@ -2,7 +2,7 @@ case_id,company,n_misstated_10k,n_flagged,detected,first_flag_filed,first_flag_f
 valeant,Valeant Pharmaceuticals,1,0,False,,,True,5,,,,
 kraftheinz,Kraft Heinz,2,0,False,,,False,2,,,,
 mimedx,MiMedx Group,5,3,True,2013-03-15,2012.0,True,6,1813.0,1910.0,4.963723477070499,19.854893908281998
-synchronoss,Synchronoss Technologies,2,0,False,,,True,6,,,,
+synchronoss,Synchronoss Technologies,2,1,True,2016-02-26,2015.0,True,6,473.0,473.0,1.2950034223134839,5.1800136892539355
 roadrunner,Roadrunner Transportation Systems,2,0,False,,,False,4,,,,
 celadon,Celadon Group,1,0,False,,,False,4,,,,
 saexploration,SAExploration Holdings,4,1,True,2017-03-15,2016.0,True,6,884.0,884.0,2.4202600958247777,9.681040383299111
@@ -13,3 +13,16 @@ quantum,Quantum Corp,3,1,True,2017-06-01,2017.0,True,6,470.0,470.0,1.28678986995
 supermicro,Super Micro Computer,2,0,False,,,False,5,,,,
 unitek,UniTek Global Services,1,0,False,,,False,1,,,,
 kitdigital,KIT digital,1,1,True,2012-03-30,2011.0,True,1,236.0,236.0,0.6461327857631759,2.5845311430527036
+archerdanielsmidla,Archer-Daniels-Midland Company,3,0,False,,,True,14,,,,
+computersciencesco,Computer Sciences Corporation,1,0,False,,,True,5,,,,
+iecelectronicscorp,IEC Electronics Corp.,1,0,False,,,True,4,,,,
+ppgindustries,PPG Industries,1,0,False,,,False,9,,,,
+maxwelltechnologie,Maxwell Technologies,1,0,False,,,False,1,,,,
+borgwarnerinc,BorgWarner Inc.,3,0,False,,,True,9,,,,
+pyxusinternational,Pyxus International,2,0,False,,,False,4,,,,
+logitechinternatio,Logitech International,2,2,True,2011-05-27,2011.0,True,3,1196.0,1196.0,3.274469541409993,13.097878165639973
+manitexinternation,Manitex International,1,0,False,,,False,6,,,,
+magnachipsemicondu,MagnaChip Semiconductor Corporation,1,0,False,,,False,1,,,,
+reshapelifescience,ReShape Lifesciences Inc.,1,0,False,,,False,1,,,,
+advanceddrainagesy,Advanced Drainage Systems,1,0,False,,,True,2,,,,
+hffoodsgroupinc,HF Foods Group Inc.,2,2,True,2020-03-16,2019.0,True,3,1040.0,1040.0,2.847364818617385,11.38945927446954

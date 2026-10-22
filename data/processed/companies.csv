@@ -13,6 +13,19 @@ cik,name,sic,sic_desc,role,case_id
 1375365,Super Micro Computer,3571,Electronic Computers,case,supermicro
 826773,UniTek Global Services,4812,Radiotelephone Communications,case,unitek
 1076700,KIT digital,8900,"Services-Services, NEC",case,kitdigital
+7084,Archer-Daniels-Midland Company,2070,Fats & Oils,case,archerdanielsmidla
+23082,Computer Sciences Corporation,7373,Services-Computer Integrated Systems Design,case,computersciencesco
+49728,IEC Electronics Corp.,3672,Printed Circuit Boards,case,iecelectronicscorp
+79879,PPG Industries,2851,"Paints, Varnishes, Lacquers, Enamels & Allied Prods",case,ppgindustries
+319815,Maxwell Technologies,3690,"Miscellaneous Electrical Machinery, Equipment & Supplies",case,maxwelltechnologie
+908255,BorgWarner Inc.,3714,Motor Vehicle Parts & Accessories,case,borgwarnerinc
+939930,Pyxus International,5150,Wholesale-Farm Product Raw Materials,case,pyxusinternational
+1032975,Logitech International,3577,"Computer Peripheral Equipment, NEC",case,logitechinternatio
+1302028,Manitex International,3559,"Special Industry Machinery, NEC",case,manitexinternation
+1325702,MagnaChip Semiconductor Corporation,3674,Semiconductors & Related Devices,case,magnachipsemicondu
+1427570,ReShape Lifesciences Inc.,2834,Pharmaceutical Preparations,case,reshapelifescience
+1604028,Advanced Drainage Systems,3086,Plastics Foam Products,case,advanceddrainagesy
+1680873,HF Foods Group Inc.,5140,Wholesale-Groceries & Related Products,case,hffoodsgroupinc
 1551152,AbbVie Inc.,2834,Pharmaceutical Preparations,control,valeant
 14272,BRISTOL MYERS SQUIBB CO,2834,Pharmaceutical Preparations,control,valeant
 882095,"GILEAD SCIENCES, INC.",2836,"Biological Products, (No Diagnostic Substances)",control,valeant
@@ -54,3 +67,42 @@ cik,name,sic,sic_desc,role,case_id
 1469433,Ancestry.com Inc.,7374,Services-Computer Processing & Data Preparation,control,kitdigital
 1451951,FriendFinder Networks Inc.,7370,"Services-Computer Programming, Data Processing, Etc.",control,kitdigital
 1111665,TELECOMMUNICATION SYSTEMS INC /FA/,7372,Services-Prepackaged Software,control,kitdigital
+1418135,Keurig Dr Pepper Inc.,2080,Beverages,control,archerdanielsmidla
+16918,"CONSTELLATION BRANDS, INC.",2080,Beverages,control,archerdanielsmidla
+55067,KELLANOVA,2040,Grain Mill Products,control,archerdanielsmidla
+796343,ADOBE INC.,7372,Services-Prepackaged Software,control,computersciencesco
+1124610,VMWARE LLC,7372,Services-Prepackaged Software,control,computersciencesco
+1058290,COGNIZANT TECHNOLOGY SOLUTIONS CORP,7371,Services-Computer Programming Services,control,computersciencesco
+722392,PLANAR SYSTEMS INC,3679,"Electronic Components, NEC",control,iecelectronicscorp
+751085,"MAGNETEK, INC.",3679,"Electronic Components, NEC",control,iecelectronicscorp
+22701,"SUNation Energy, Inc.",3674,Semiconductors & Related Devices,control,iecelectronicscorp
+915389,EASTMAN CHEMICAL CO,2821,"Plastic Materials, Synth Resins & Nonvulcan Elastomers",control,ppgindustries
+2969,"Air Products & Chemicals, Inc.",2810,Industrial Inorganic Chemicals,control,ppgindustries
+1285785,MOSAIC CO,2870,Agricultural Chemicals,control,ppgindustries
+1051627,AXT INC,3674,Semiconductors & Related Devices,control,maxwelltechnologie
+1104252,DDI CORP,3672,Printed Circuit Boards,control,maxwelltechnologie
+1423542,"SKULLCANDY, INC.",3651,Household Audio & Video Equipment,control,maxwelltechnologie
+842162,LEAR CORP,3714,Motor Vehicle Parts & Accessories,control,borgwarnerinc
+793952,"HARLEY-DAVIDSON, INC.",3751,"Motorcycles, Bicycles & Parts",control,borgwarnerinc
+1021162,TRIUMPH GROUP INC,3720,Aircraft & Parts,control,borgwarnerinc
+102037,UNIVERSAL CORP /VA/,5150,Wholesale-Farm Product Raw Materials,control,pyxusinternational
+1020859,UNITED NATURAL FOODS INC,5141,"Wholesale-Groceries, General Line",control,pyxusinternational
+75252,ACCENDRA HEALTH INC/VA/,5047,"Wholesale-Medical, Dental & Hospital Equipment & Supplies",control,pyxusinternational
+59527,LINCOLN ELECTRIC HOLDINGS INC,3540,Metalworkg Machinery & Equipment,control,logitechinternatio
+29644,DONALDSON Co INC,3564,Industrial & Commercial Fans & Blowers & Air Purifing Equip,control,logitechinternatio
+1316656,Dresser-Rand Group Inc.,3510,Engines & Turbines,control,logitechinternatio
+1113232,AXCELIS TECHNOLOGIES INC,3559,"Special Industry Machinery, NEC",control,manitexinternation
+909791,ULTRATECH INC,3559,"Special Industry Machinery, NEC",control,manitexinternation
+1452751,Nimble Storage Inc,3572,Computer Storage Devices,control,manitexinternation
+1042825,POWER ONE INC,3679,"Electronic Components, NEC",control,magnachipsemicondu
+1039065,OSI SYSTEMS INC,3674,Semiconductors & Related Devices,control,magnachipsemicondu
+791915,CYPRESS SEMICONDUCTOR CORP /DE/,3674,Semiconductors & Related Devices,control,magnachipsemicondu
+1780097,"Baudax Bio, Inc.",2834,Pharmaceutical Preparations,control,reshapelifescience
+1858685,Biofrontera Inc.,2834,Pharmaceutical Preparations,control,reshapelifescience
+1267602,ALIMERA SCIENCES INC,2834,Pharmaceutical Preparations,control,reshapelifescience
+802967,"ASSOCIATED MATERIALS, LLC",3089,"Plastics Products, NEC",control,advanceddrainagesy
+1090061,OMNOVA SOLUTIONS INC,3060,"Fabricated Rubber Products, NEC",control,advanceddrainagesy
+820318,COHERENT CORP.,3827,Optical Instruments & Lenses,control,advanceddrainagesy
+1517175,"Chefs' Warehouse, Inc.",5141,"Wholesale-Groceries, General Line",control,hffoodsgroupinc
+1538849,CrossAmerica Partners LP,5172,Wholesale-Petroleum & Petroleum Products (No Bulk Stations),control,hffoodsgroupinc
+1668673,"PetIQ, Inc.",5122,"Wholesale-Drugs, Proprietaries & Druggists' Sundries",control,hffoodsgroupinc

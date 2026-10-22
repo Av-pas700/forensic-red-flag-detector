@@ -69,6 +69,8 @@ def build_values(results: dict, outcomes: dict[str, pd.DataFrame], cases: pd.Dat
         v[f"prec_{k}_ci"] = f"{pct(m[f'{k}.precision']['lo'])} to {pct(m[f'{k}.precision']['hi'])}"
     for k in ("core", "extended", "anchored"):
         d = m[f"diff_auc.{k}_minus_beneish"]
+        v[f"diff_{k}_pt"] = f2(d["estimate"])
+        v[f"diff_{k}_lo"], v[f"diff_{k}_hi"] = f2(d["lo"]), f2(d["hi"])
         v[f"diff_{k}"] = f"{f2(d['estimate'])} (95% CI {f2(d['lo'])} to {f2(d['hi'])})"
         v[f"verdict_{k}"] = _verdict_vs_baseline(
             d,
@@ -118,7 +120,7 @@ def build_values(results: dict, outcomes: dict[str, pd.DataFrame], cases: pd.Dat
     for k in ("beneish_fixed", "core", "extended", "anchored"):
         a = m[f"{k}.roc_auc"]
         v[f"auc_{k}_lo"], v[f"auc_{k}_hi"] = f2(a["lo"]), f2(a["hi"])
-    others = {k: d for k, d in results["single_signals"].items() if k != "mscore"}
+    others = {k: d for k, d in results["single_signals"].items() if k != "mscore" and not k.endswith("_ops")}
     best = max(others, key=lambda k: others[k]["estimate"])
     v["best_other_name"], v["best_other_pt"] = best, ci_prose(others[best])
     v["n_bankrupt"] = str(int(cases["bankruptcy_date"].notna().sum()))
@@ -132,6 +134,94 @@ def build_values(results: dict, outcomes: dict[str, pd.DataFrame], cases: pd.Dat
         v["perm_reading"] = "Only the baseline ranks misstated years better than chance would."
     else:
         v["perm_reading"] = "Neither is clearly better than chance at this sample size."
+
+    def lead_dev(k):
+        L = results["development"]["lead"][k]
+        return f"{L['n_detected']} of {L['n_cases']}"
+
+    # holdout / development / universe / sensitivity --------------------------------------
+    h, d = results["holdout"], results["development"]
+    hm, dm = h["metrics"], d["metrics"]
+    v["h_n_cases"], v["h_n_controls"] = str(h["n_cases"]), str(h["n_controls"])
+    v["h_n_pos"], v["h_n_neg"] = str(h["n_positive_rows"]), str(h["n_negative_rows"])
+    v["d_n_cases"], v["d_n_controls"] = str(d["sample"]["n_cases"]), str(d["sample"]["n_controls"])
+    for k in ("beneish_fixed", "core"):
+        v[f"h_auc_{k}"] = with_ci(hm[f"{k}.roc_auc"])
+        v[f"h_auc_{k}_full"] = ci_prose(hm[f"{k}.roc_auc"])
+        v[f"h_auc_{k}_pt"] = f2(hm[f"{k}.roc_auc"]["estimate"])
+        v[f"h_auc_{k}_lo"], v[f"h_auc_{k}_hi"] = f2(hm[f"{k}.roc_auc"]["lo"]), f2(hm[f"{k}.roc_auc"]["hi"])
+        v[f"h_pr_{k}"] = with_ci(hm[f"{k}.pr_auc"])
+        v[f"h_rec_{k}"] = pct(hm[f"{k}.recall"]["estimate"])
+        v[f"h_fpr_{k}"] = pct(hm[f"{k}.fpr"]["estimate"])
+        v[f"h_det_{k}"] = f"{h['lead'][k]['n_detected']} of {h['lead'][k]['n_cases']}"
+        v[f"h_lead_med_y_{k}"] = f2(h["lead"][k]["median_lead_years"])
+        v[f"d_auc_{k}"] = with_ci(dm[f"{k}.roc_auc"])
+        v[f"d_auc_{k}_full"] = ci_prose(dm[f"{k}.roc_auc"])
+        v[f"d_auc_{k}_pt"] = f2(dm[f"{k}.roc_auc"]["estimate"])
+        v[f"h_perm_{k}"] = "<0.001" if h["permutation_p"][k] < 0.001 else f"{h['permutation_p'][k]:.3f}"
+    v["h_diff_core"] = ci_prose(hm["diff_auc.core_minus_beneish"])
+    b = hm["beneish_fixed.roc_auc"]
+    if b["lo"] > 0.5:
+        v["h_reading"] = (
+            "The M-score ranked misstated years above control years on cases it had never seen, with the lower end of the interval above chance."
+        )
+    elif b["estimate"] > 0.5:
+        v["h_reading"] = (
+            "The M-score's point estimate on unseen cases is above chance, but the interval includes chance, so the holdout does not confirm the development result."
+        )
+    else:
+        v["h_reading"] = (
+            "The M-score did no better than chance on unseen cases, so the development result did not generalise."
+        )
+    c = hm["core.roc_auc"]
+    v["h_core_reading"] = (
+        "The frozen composite also ranked above chance."
+        if c["lo"] > 0.5
+        else "The frozen composite's interval includes chance."
+    )
+
+    uni = results.get("universe", {})
+    years = sorted(uni)
+    for y in years:
+        v[f"u_flag_{y}"] = pct(uni[y]["flag_share"])
+        v[f"u_n_{y}"] = f"{uni[y]['n_scored']:,}"
+        v[f"ppv_univ_1_{y}"] = pct(m["beneish_fixed.recall"]["estimate"] * 0.01 / uni[y]["flag_share"], 1)
+    if years:
+        shares = [uni[y]["flag_share"] for y in years]
+        v["u_range"] = f"{pct(min(shares))} to {pct(max(shares))}"
+        v["u_range_dash"] = f"{pct(min(shares))}-{pct(max(shares))}"
+        ppvs = [m["beneish_fixed.recall"]["estimate"] * 0.01 / uni[y]["flag_share"] for y in years]
+        v["ppv_univ_range"] = f"{pct(min(ppvs), 1)}-{pct(max(ppvs), 1)}"
+        v["u_years"] = " and ".join(years)
+
+    bt = results.get("by_issue_type", {})
+    if "revenue" in bt and "other" in bt:
+        r_, o_ = bt["revenue"]["beneish_fixed.roc_auc"], bt["other"]["beneish_fixed.roc_auc"]
+        v["bt_rev_cases"], v["bt_oth_cases"] = str(bt["revenue"]["n_cases"]), str(bt["other"]["n_cases"])
+        v["bt_rev_pos"], v["bt_oth_pos"] = (
+            str(bt["revenue"]["n_positive_rows"]),
+            str(bt["other"]["n_positive_rows"]),
+        )
+        v["bt_rev_auc"], v["bt_oth_auc"] = ci_prose(r_), ci_prose(o_)
+        v["bt_rev_rec"] = pct(bt["revenue"]["beneish_fixed.recall"]["estimate"])
+        v["bt_oth_rec"] = pct(bt["other"]["beneish_fixed.recall"]["estimate"])
+        if r_["lo"] > 0.5 and o_["lo"] <= 0.5:
+            v["bt_reading"] = (
+                "The M-score separates revenue-type cases from controls but not the others - consistent with it being built for "
+                "revenue and receivable manipulation. The two intervals overlap, the grouping was made after I saw the holdout result, and the cell sizes are small, "
+                "so this is a hypothesis for a pre-registered follow-up, not a finding."
+            )
+        else:
+            v["bt_reading"] = "The split by restatement type does not clearly explain the holdout result."
+
+    so = results["sensitivity_ops"]
+    v["ops_auc_full"] = ci_prose(so["auc_ops"])
+    v["ops_diff_full"] = ci_prose(so["diff"])
+    v["ops_reading"] = (
+        "Using continuing-operations income did not change the conclusion."
+        if so["diff"]["lo"] <= 0 <= so["diff"]["hi"]
+        else "Using continuing-operations income changed the ranking measurably."
+    )
 
     # tables --------------------------------------------------------------------------------
     rows = [
@@ -168,6 +258,38 @@ def build_values(results: dict, outcomes: dict[str, pd.DataFrame], cases: pd.Dat
             f"| {c['company']} | {int(core.loc[cid, 'n_misstated_10k'])} | {c['nonreliance_date']:%Y-%m-%d} | {_lead_cell(base, cid)} | {_lead_cell(core, cid)} |"
         )
     v["table_cases"] = "\n".join(rows)
+    # generalisation table (development vs untouched holdout vs pooled)
+    g = [
+        "| Model | Development cases (LOCO) | Holdout cases (frozen rules) | Pooled (LOCO) |",
+        "|---|---|---|---|",
+    ]
+    for k, label in (("beneish_fixed", "Beneish M-score > -1.78"), ("core", "Composite, 6 signals")):
+        g.append(f"| {label}: ROC-AUC [95% CI] | {v[f'd_auc_{k}']} | {v[f'h_auc_{k}']} | {v[f'auc_{k}']} |")
+    for k, label in (("beneish_fixed", "Beneish M-score > -1.78"), ("core", "Composite, 6 signals")):
+        g.append(
+            f"| {label}: recall / false-positive rate | {pct(dm[f'{k}.recall']['estimate'])} / {pct(dm[f'{k}.fpr']['estimate'])} "
+            f"| {v[f'h_rec_{k}']} / {v[f'h_fpr_{k}']} | {v[f'rec_{k}']} / {v[f'fpr_{k}']} |"
+        )
+        g.append(
+            f"| {label}: cases flagged before cut-off | {lead_dev(k)} | {v[f'h_det_{k}']} | {v[f'det_{k}']} |"
+        )
+    v["table_generalisation"] = "\n".join(g)
+
+    hc = outcomes.get("holdout_core")
+    hb = outcomes.get("holdout_beneish_fixed")
+    if hc is not None and hb is not None:
+        hc, hb = hc.set_index("case_id"), hb.set_index("case_id")
+        hrows = [
+            "| Holdout case | Misstated 10-Ks scored | Item 4.02 filed | Beneish flag: lead (yrs) | Composite flag: lead (yrs) |",
+            "|---|---|---|---|---|",
+        ]
+        for _, c in cases[cases["cohort"] == "holdout"].sort_values("nonreliance_date").iterrows():
+            cid = c["case_id"]
+            hrows.append(
+                f"| {c['company']} | {int(hc.loc[cid, 'n_misstated_10k'])} | {c['nonreliance_date']:%Y-%m-%d} | {_lead_cell(hb, cid)} | {_lead_cell(hc, cid)} |"
+            )
+        v["table_holdout_cases"] = "\n".join(hrows)
+
     return v
 
 
@@ -205,8 +327,8 @@ def case_doc_values(
 ) -> dict[str, str]:
     """Tables for docs/case_selection.md (every row comes from verified CSVs)."""
     rows = [
-        "| Case | CIK | Item 4.02 8-K (primary source) | Earlier verified signal | Fiscal years labelled misstated | What was misstated | SEC action | Chapter 11 (Item 1.03) |",
-        "|---|---|---|---|---|---|---|---|",
+        "| Case | Cohort | CIK | Item 4.02 8-K (primary source) | Earlier verified signal | Fiscal years labelled misstated | What was misstated | SEC action | Chapter 11 (Item 1.03) |",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
     for _, c in cases.sort_values("nonreliance_date").iterrows():
         sig = (
@@ -226,7 +348,7 @@ def case_doc_values(
         nr = _md_link(c["nonreliance_date"].strftime("%Y-%m-%d"), c["nonreliance_url"])
         enf = _md_link(c["enforcement_date"].strftime("%Y-%m-%d"), c["enforcement_url"])
         rows.append(
-            f"| {c['company']} | {c['cik']} | {nr} | {sig} | {fys} | {c['restated_what']} | "
+            f"| {c['company']} | {c.get('cohort', 'development')} | {c['cik']} | {nr} | {sig} | {fys} | {c['restated_what']} | "
             f"{enf}: {c['enforcement_note']} | {bk} |"
         )
     out = {"table_case_sources": "\n".join(rows)}
@@ -246,6 +368,13 @@ def case_doc_values(
     for _, e in excluded.iterrows():
         erow.append(f"| {e['company']} | {e['reason']} | {e['evidence']} |")
     out["table_excluded"] = "\n".join(erow)
+    rej_path = Path(__file__).resolve().parents[2] / "data" / "cases" / "holdout_rejected.csv"
+    if rej_path.is_file():
+        rej = pd.read_csv(rej_path)
+        rrows = ["| AAER company | AAER date | Why it is not in the holdout |", "|---|---|---|"]
+        rrows += [f"| {r['company']} | {r['aaer_date']} | {r['reason']} |" for _, r in rej.iterrows()]
+        out["table_holdout_rejected"] = "\n".join(rrows)
+        out["n_holdout_rejected"] = str(len(rej))
     out["build_log"] = "\n".join(f"- {line}" for line in build_log) if build_log else "- (none)"
     out["n_cases_tbl"] = str(len(cases))
     return out
@@ -279,11 +408,18 @@ def narrative_guards(results: dict) -> list[str]:
             bad.append("core point estimate above baseline: 'best performer' wording needs review")
     if sig["benford_mad"]["lo"] > 0.5 or sig["benford_mad"]["estimate"] > 0.55:
         bad.append("Benford MAD separates groups: 'did not separate' is wrong")
-    others = {k: d for k, d in sig.items() if k != "mscore"}
+    others = {k: d for k, d in sig.items() if k != "mscore" and not k.endswith("_ops")}
     if others[max(others, key=lambda k: others[k]["estimate"])]["lo"] > 0.5:
         bad.append("the best non-M-score signal is significantly above 0.5: 'no better than chance' is wrong")
-    if max(d["estimate"] for k, d in sig.items() if k != "mscore") > sig["mscore"]["estimate"]:
+    if (
+        max(d["estimate"] for k, d in sig.items() if k != "mscore" and not k.endswith("_ops"))
+        > sig["mscore"]["estimate"]
+    ):
         bad.append("a single signal beats the M-score: 'M-score is best' is wrong")
+    if results["holdout"]["metrics"]["beneish_fixed.roc_auc"]["lo"] > 0.5:
+        bad.append("holdout confirms the M-score: the memo's 'does not generalise' wording must be rewritten")
+    if results["holdout"]["metrics"]["diff_auc.core_minus_beneish"]["lo"] > 0:
+        bad.append("frozen composite significantly beats the baseline on the holdout: wording must change")
     return bad
 
 
@@ -301,6 +437,8 @@ def render_all(root: Path) -> dict[Path, str]:
     outcomes = {
         "core": pd.read_csv(root / "reports/tables/case_outcomes_core.csv"),
         "beneish_fixed": pd.read_csv(root / "reports/tables/case_outcomes_beneish.csv"),
+        "holdout_core": pd.read_csv(root / "reports/tables/holdout_outcomes_core.csv"),
+        "holdout_beneish_fixed": pd.read_csv(root / "reports/tables/holdout_outcomes_beneish_fixed.csv"),
     }
     controls = pd.read_csv(root / "data/processed/controls.csv")
     excluded = pd.read_csv(root / "data/cases/excluded.csv")

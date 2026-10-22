@@ -34,6 +34,7 @@ def build_panel(fin: pd.DataFrame, companies: pd.DataFrame, cases: pd.DataFrame)
     panel = panel[~(is_case & (panel["filed"] >= cutoff.where(is_case)))].copy()
 
     positives = panel["case_id"].map(cases["positive_fyears"])
+    panel["cohort"] = panel["case_id"].map(cases["cohort"]) if "cohort" in cases else "development"
     panel["in_window"] = [
         fy in (yrs if isinstance(yrs, list) else [])
         for fy, yrs in zip(panel["fyear"], positives, strict=True)

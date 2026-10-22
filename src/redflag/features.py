@@ -109,6 +109,9 @@ def beneish_indices(df: pd.DataFrame) -> pd.DataFrame:
 
     # TATA: (income - operating cash flow) / total assets - the cash-flow form of total accruals
     tata = _div(d["net_income"] - d["cfo"], d["total_assets"])
+    # Sensitivity: income from continuing operations (falls back to net income when not reported)
+    income_ops = d["income_cont"].fillna(d["net_income"]) if "income_cont" in d else d["net_income"]
+    tata_ops = _div(income_ops - d["cfo"], d["total_assets"])
 
     out = pd.DataFrame(
         {
@@ -120,6 +123,7 @@ def beneish_indices(df: pd.DataFrame) -> pd.DataFrame:
             "sgai": sgai,
             "lvgi": lvgi,
             "tata": tata,
+            "tata_ops": tata_ops,
             "n_imputed": n_imputed,
         },
         index=d.index,
@@ -127,6 +131,7 @@ def beneish_indices(df: pd.DataFrame) -> pd.DataFrame:
     for col in INDEX_COLS[:-1]:
         out[col] = out[col].clip(*INDEX_CLIP)
     out["tata"] = out["tata"].clip(*TATA_CLIP)
+    out["tata_ops"] = out["tata_ops"].clip(*TATA_CLIP)
     return out
 
 
@@ -195,6 +200,8 @@ def compute_features(df: pd.DataFrame) -> pd.DataFrame:
     idx = beneish_indices(df)
     out = pd.concat([df, idx], axis=1)
     out["mscore"] = beneish_mscore(idx)
+    # Sensitivity variant: identical except TATA uses income from continuing operations
+    out["mscore_ops"] = out["mscore"] + BENEISH_COEF["tata"] * (idx["tata_ops"] - idx["tata"])
     out = pd.concat([out, accrual_signals(df)], axis=1)
     if all(f"bd{i}" in df for i in range(1, 10)):
         out = pd.concat([out, benford_signals(df)], axis=1)
